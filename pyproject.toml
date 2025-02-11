@@ -19,6 +19,7 @@ dependencies = [
     "sentencepiece",
     "attrdict",
     "einops",
+    "fastapi",
 ]
 
 [project.optional-dependencies]

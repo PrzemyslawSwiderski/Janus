@@ -4,6 +4,10 @@ plugins {
     id("com.pswidersk.python-plugin") version "2.8.2"
 }
 
+pythonPlugin {
+    pythonVersion = "3.12.8"
+}
+
 tasks {
 
     register<Exec>("buildImage") {
@@ -17,12 +21,14 @@ tasks {
             "-v", "janus-cache:/root/.cache",
             "-v", "gradle-cache:/root/.gradle",
             "-v", "gradle-app-cache:/app/gradle-setup/.gradle/",
+            "-p", "8000:8000",
             "--name", "janus-container",
             "--rm",
             "-i", "janus-local",
             "runDemoScript"
         )
         standardInput = System.`in`
+        dependsOn("buildImage")
     }
 
     val pipInstall by registering(VenvTask::class) {
@@ -33,7 +39,7 @@ tasks {
 
     register<VenvTask>("runDemoScript") {
         workingDir = projectDir.parentFile
-        args = listOf("demo/app_januspro.py")
+        args = listOf("demo/fastapi_app.py")
         dependsOn(pipInstall)
     }
 
